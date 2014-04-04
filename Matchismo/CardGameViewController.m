@@ -7,6 +7,8 @@
 //
 
 #import "CardGameViewController.h"
+#import "Deck.h"
+#import "PlayingCardDeck.h"
 
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
@@ -35,18 +37,20 @@
         [sender setBackgroundImage:[UIImage imageNamed:@"cardback"]
                           forState:UIControlStateNormal];
         [sender setTitle:@"" forState:UIControlStateNormal];
+         self.flipCount++;
     } else {
-        [sender setBackgroundImage:[UIImage imageNamed:@"cardfront"]
-                          forState:UIControlStateNormal];
+        
         Card *card = [self.myDeck drawRandomCard];
-        if(!card) {
-            NSLog(@"Run out of cards. Creating a new deck");
-            self.myDeck = nil;
-            card = [self.myDeck drawRandomCard];
+        if(card) {
+            [sender setBackgroundImage:[UIImage imageNamed:@"cardfront"]
+                              forState:UIControlStateNormal];
+            [sender setTitle:card.contents forState:UIControlStateNormal];
+             self.flipCount++;
+        } else {
+            NSLog(@"No more cards");
         }
-        [sender setTitle:card.contents forState:UIControlStateNormal];
+        
     }
-    self.flipCount++;
 }
 
 
