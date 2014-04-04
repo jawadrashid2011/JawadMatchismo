@@ -11,10 +11,17 @@
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *flipsLabel;
 @property (nonatomic) int flipCount;
+@property (nonatomic, strong) Deck *myDeck;
 
 @end
 
 @implementation CardGameViewController
+
+- (Deck *)myDeck
+{
+    if(!_myDeck) _myDeck = [[PlayingCardDeck alloc] init];
+    return _myDeck;
+}
 
 -(void)setFlipCount:(int)flipCount
 {
@@ -31,7 +38,13 @@
     } else {
         [sender setBackgroundImage:[UIImage imageNamed:@"cardfront"]
                           forState:UIControlStateNormal];
-        [sender setTitle:@"A♣" forState:UIControlStateNormal];
+        Card *card = [self.myDeck drawRandomCard];
+        if(!card) {
+            NSLog(@"Run out of cards. Creating a new deck");
+            self.myDeck = nil;
+            card = [self.myDeck drawRandomCard];
+        }
+        [sender setTitle:card.contents forState:UIControlStateNormal];
     }
     self.flipCount++;
 }
